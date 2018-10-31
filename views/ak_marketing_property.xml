@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- Marketing PROPERTY SECTION -->
+        <!-- Main Marketing Property Tree View -->
+        <record model="ir.ui.view" id="view_ak_marketing_main_property_tree">
+            <field name="name">view.ak.marketing.main.property.tree</field>
+            <field name="priority" eval="32"/>
+            <field name="model">ak.property</field>
+            <field name="arch" type="xml">
+                <tree string="Main Marketing Properties">
+                    <field name='ak_name'/>
+                    <field name="ak_external_owner"/>
+                    <field name="ak_owner" />
+                    <field name='ak_main_property_type' string="Property Type"/>
+                    <field name='ak_region' />
+                    <!-- <field name='ak_next_scheduled_visit_date' /> -->
+                    <field name='ak_responisible' />
+                    <!-- <field name='ak_admin' /> -->
+                </tree>
+            </field>
+        </record>
+
+        <!-- Main Properties Form View. -->
+        <record model="ir.ui.view" id="view_ak_main_marketing_property_form">
+            <field name="name">view.ak.main.marketing.property.form</field>
+            <field name="model">ak.property</field>
+            <field name="priority" eval="32"/>
+            <field name="arch" type="xml">
+                <form string="Main Marketing Properties">
+                    <header>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="property_buttons">
+                            <button string="Reservation" class="oe_inline oe_stat_button" type="action"
+                                name="%(ak_akhawen.action_ak_reservation_smart_button)d"
+                                icon="fa-star" context="{'default_ak_property_id':id}">
+                            </button>
+                            <button string="Contract" class="oe_inline oe_stat_button" type="object"
+                                name="get_property_contract"
+                                icon="fa-star">
+                            </button>
+                        </div>
+                        <div class="oe_edit_only">
+                            <label for="ak_name" string="Property Name"/>
+                        </div>
+                        <field name="ak_main_property" eval="True" class="oe_inline" invisible="1"/>
+                        <h1>
+                            <field name="ak_name" default_focus="1" style="width: 50%%" required='1' />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="ak_external_owner"/>
+                                <field name="main_property_id" string="Property" domain="[('ak_main_property','=',True),('ak_is_marketing','=',False)]"/>
+                                <field name="ak_owner"
+                                    context="{'form_view_ref': 'ak_akhawen.view_partner_owner_form','default_ak_is_owner':True}"/>
+                                <label for="ak_street" string="Address"/>
+                                <div>
+                                    <field name="ak_street" placeholder="Street..."  />
+                                    <div class="address_format">
+                                        <field name="ak_city" placeholder="City" style="width: 50%%" />
+                                        <field name="ak_district" class="oe_no_button" placeholder="District" style="width: 50%%" options='{"no_open": True}'/>
+                                    </div>
+                                    <field name='ak_country_id' placeholder='Country...'/>
+                                    <button name="open_map" string="Map" type="object" icon="gtk-zoom-in"/>
+                                    <button name="action_mail_send" string="Send Map" type="object" icon="gtk-zoom-in"/>
+                                    <button string="Send SMS" name="action_sms_send" type="object" icon="gtk-zoom-in"/>
+                                </div>
+                                <field name='ak_region' />
+                                <field name='ak_responisible' />
+                                <field name='ak_main_property_type'  string="Property Type" />
+                                <field name='ak_floor'/>
+                                <field name='ak_nb_rooms' />
+                                <field name='ak_nb_shops' />
+                                <field name='ak_nb_offices' />
+                                <field name='ak_sq_feet' />
+                                <field name='ak_total_rent' />
+                            </group>
+                            <group>
+                                <field name='ak_last_scheduled_visit_date' invisible="1"/>
+                                <field name='ak_garden' />
+                                <field name='ak_parking' />
+                                <field name='ak_advertisement_hoarding' />
+                                <field name='ak_admin' />
+                                <field name='ak_details' placeholder="Enter some details for garden/parking/advertisement Hoarding..." attrs="{'invisible': [('ak_garden','=',False),('ak_parking','=',False),('ak_advertisement_hoarding','=',False)]}" />
+                                <field name="ak_is_marketing" invisible="1"/>
+                                <field name="ak_type" />
+                                <field name="marketing_states" invisible="1" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes">
+                                <field name='ak_notes' nolabel='1' placeholder="Enter notes about marketing property ..."/>
+                            </page>
+                            <page string='History'>
+                                <field name='ak_property_visit_ids'/>
+                            </page>
+                            <page string='Sub Properties' attrs="{'invisible': [('ak_main_property','=',False)]}">
+                                <field name="ak_sub_property_ids"
+                                    domain="[('ak_main_property','=',True), ('ak_is_marketing','=',True)]"
+                                    context="{'form_view_ref': 'ak_akhawen.view_ak_sub_marketing_property_form', 'tree_view_ref': 'ak_akhawen.view_ak_sub_marketing_property_tree', 'default_ak_is_marketing': True}"/>
+                            </page>
+                            <page string="Map">
+                                <button name="open_map" string="Map" type="object" icon="gtk-zoom-in"/>
+                                <button name="action_mail_send" string="Send Map" type="object" icon="gtk-zoom-in"/>
+                                <field name='ak_map_url' widget='url'/>
+                            </page>
+                            <page string="Accounting">
+                                <group col="4">
+                                    <field name="ak_property_account_payable" required="1"/>
+                                    <field name="ak_property_account_receivable" required="1"/>
+                                    <!-- <field name="ak_downpayment_account" required="1"/>
+                                    <field name="ak_commision_account" required="1"/>
+                                    <field name="ak_rent_income_account" required="1"/> -->
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Main Property kanban View -->
+        <record model="ir.ui.view" id="view_ak_main_marketing_property_kanban">
+            <field name="name">ak.main.marketing.property.kanban</field>
+            <field name="priority" eval="32"/>
+            <field name="model">ak.property</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="ak_owner"/>
+                    <field name="ak_region"/>
+                    <field name="ak_next_scheduled_visit_date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                          <div class="oe_module_vignette">
+                            <div class="oe_module_desc">
+                            <h3><field name="ak_name"/></h3>
+                            <h4><a type="open"><field name="ak_owner"/></a></h4>
+                            <p>
+                              <t t-if="record.ak_type"><b>Property Type :</b> <field name="ak_type"/><br/></t>
+                            </p>
+                            <p>
+                              <t t-if="record.ak_region.raw_value"><b>Region :</b> <field name="ak_region"/><br/></t>
+                            </p>
+                              </div>
+                          </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Marketing Property Search View -->
+        <record id="view_ak_marketing_property_filter" model="ir.ui.view">
+            <field name="name">view.ak.marketing.property.filter</field>
+            <field name="model">ak.property</field>
+            <field name="arch" type="xml">
+                <search string="Search Marketing Property">
+                    <field name="ak_name" string="Property Name"/>
+                    <field name="ak_owner" string="Owner"/>
+                    <field name="ak_responisible" string="Responsible"/>
+                    <field name="ak_main_property_type"/>
+                    <filter name="ak_garden" string="Is Garden" domain="[('ak_garden','=',True)]" />
+                    <filter name="ak_parking" string="Is Parking" domain="[('ak_parking','=',True)]" />
+                    <filter name="ak_advertisement_hoarding" string="Is Advertisement Hoarding" domain="[('ak_advertisement_hoarding','=',True)]" />
+                    <filter name="ak_garden" string="Is Under AL Akhawen Administration" domain="[('ak_advertisement_hoarding','=',True)]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Owner" domain="[]" context="{'group_by':'ak_owner'}"/>
+                        <filter string="Responsible" domain="[]" context="{'group_by':'ak_responisible'}"/>
+                        <filter string="Property Type" domain="[]" context="{'group_by':'ak_main_property_type'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'ak_type'}"/>
+                        <filter string="City" domain="[]" context="{'group_by':'ak_city'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- Sub Property Tree View -->
+        <record model="ir.ui.view" id="view_ak_sub_marketing_property_tree">
+            <field name="name">view.ak.sub.marketing.property.tree</field>
+            <field name="model">ak.property</field>
+            <field name="arch" type="xml">
+                <tree string="Sub Marketing Properties">
+                    <field name='ak_name'/>
+                    <field name='ak_sub_property_type'  string="Property Type"/>
+                    <field name='main_property_id' string="Parent Property"/>
+                    <field name='ak_rent' />
+                    <field name='ak_admin' />
+                    <field name='ak_responisible' />
+                    <field name="ak_type" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Sub Properties Form View. -->
+        <record model="ir.ui.view" id="view_ak_sub_marketing_property_form">
+            <field name="name">view.ak.sub.marketing.property.form</field>
+            <field name="model">ak.property</field>
+            <field name="arch" type="xml">
+                <form string="Sub Marketing Properties">
+                    <header>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="property_buttons">
+                            <button string="Reservation" class="oe_inline oe_stat_button" type="action"
+                                name="%(ak_akhawen.action_ak_reservation_smart_button)d"
+                                icon="fa-star">
+                            </button>
+                            <button string="Contract" class="oe_inline oe_stat_button" type="object"
+                                name="get_property_contract"
+                                icon="fa-star">
+                            </button>
+                        </div>
+                        <div class="oe_edit_only">
+                            <label for="ak_name" string="Property Name"/>
+                        </div>
+                        <h1>
+                            <field name="ak_name" default_focus="1" style="width: 50%%" required='1' />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="main_property_id" domain="[('ak_main_property','=',True), ('ak_is_marketing','=',True)]" context="{'default_ak_is_marketing': True, 'default_ak_main_property': True, 'form_view_ref': 'ak_akhawen.view_ak_main_marketing_property_form'}"/>
+                                <field name='ak_sub_property_type' string="Property Type"/>
+                                <field name='ak_responisible' />
+                                <field name='ak_vacancy_period' />
+                                <field name='ak_floor'/>
+                                <field name='ak_rent' />
+                                <field name='ak_sq_feet' />
+                            </group>
+                            <group>
+                                <field name='ak_is_rented' readonly="1"/>
+                                <field name='ak_is_reserved' readonly="1"/>
+                                <field name='ak_under_maintenance' readonly="1"/>
+                                <field name='ak_admin' />
+                                <field name="ak_is_marketing" invisible="1" />
+                                <field name="ak_type" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes">
+                                <field name='ak_notes' nolabel='1' placeholder="Enter notes about property ..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Marketing Sub Property Search View -->
+        <record id="view_ak_marketing_sub_property_filter" model="ir.ui.view">
+            <field name="name">view.ak.marketing.sub.property.filter</field>
+            <field name="model">ak.property</field>
+            <field name="arch" type="xml">
+                <search string="Search Marketing Sub Property">
+                    <field name="ak_name" string="Property Name"/>
+                    <field name="ak_responisible" string="Responsible"/>
+                    <field name="ak_main_property_type"/>
+                    <field name="ak_sub_property_type"/>
+                    <filter name="ak_is_rented" string="Is Rented" domain="[('ak_is_rented','=',True)]" />
+                    <filter name="ak_is_reserved" string="Is Reserved" domain="[('ak_is_reserved','=',True)]" />
+                    <filter name="ak_under_maintenance" string="Is Under Maintenance" domain="[('ak_under_maintenance','=',True)]" />
+                    <filter name="ak_admin" string="Is Under AL Akhawen Administration" domain="[('ak_admin','=',True)]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Responsible" domain="[]" context="{'group_by':'ak_responisible'}"/>
+                        <filter string="Property Type" domain="[]" context="{'group_by':'ak_main_property_type'}"/>
+                        <filter string="Sub Property Type" domain="[]" context="{'group_by':'ak_sub_property_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ak_sub_marketing_property_form" model="ir.actions.act_window">
+            <field name="name">Sub Properties</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.property</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('ak_main_property','=',False), ('ak_is_marketing','=',True)]</field>
+            <field name="context" eval="{'default_ak_is_marketing': True,'marketing_sub_properties':True}"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_ak_sub_marketing_property_form" />
+            <field name="search_view_id" ref="view_ak_marketing_sub_property_filter"/>
+        </record>
+         <record id="action_sub_marketing_property_tree" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ak_sub_marketing_property_tree"/>
+            <field name="act_window_id" ref="action_ak_sub_marketing_property_form"/>
+        </record>
+
+        <!-- Main Property Action -->
+        <record id="action_ak_main_marketing_property_form" model="ir.actions.act_window">
+            <field name="name">Advertisement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.property</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('ak_main_property','=',True),('ak_is_marketing','=',True),('ak_is_reserved','=',False)]</field>
+            <field name="context" eval="{'default_ak_main_property': True, 'default_ak_is_marketing': True,'marketing_main_properties':'Marketing Main Properties'}"/>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_ak_marketing_property_filter"/>
+        </record>
+
+        <!-- Vacant Marketing Property Action -->
+        <record id="action_ak_vacant_marketing_property_form" model="ir.actions.act_window">
+            <field name="name">Marketing List</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.property</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('ak_main_property','=',False),('ak_is_rented','=',False),('ak_is_reserved','=',False),('ak_is_marketing','=',True)]</field>
+            <field name="context" eval="{'marketing_list':True}"/>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ak_marketing_property_filter"/>
+        </record>
+        <record id="action_ak_vacant_marketing_property_form_tree_view" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="ak_akhawen.view_ak_main_property_tree"/>
+            <field name="act_window_id" ref="action_ak_vacant_marketing_property_form"/>
+        </record>
+        <record id="action_ak_vacant_marketing_property_form_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ak_sub_marketing_property_form"/>
+            <field name="act_window_id" ref="action_ak_vacant_marketing_property_form"/>
+        </record>
+        <record id="action_main_marketing_property_kanban" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="ak_akhawen.view_ak_main_property_kanban"/>
+            <field name="act_window_id" ref="action_ak_main_marketing_property_form"/>
+        </record>
+
+        <record id="action_main_marketing_property_tree" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ak_marketing_main_property_tree"/>
+            <field name="act_window_id" ref="action_ak_main_marketing_property_form"/>
+        </record>
+
+        <record id="action_main_marketing_property_form" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ak_main_marketing_property_form"/>
+            <field name="act_window_id" ref="action_ak_main_marketing_property_form"/>
+        </record>
+
+<!-- fawzy -->
+        <!-- Owner Property inherited smart button -->
+        <record id="action_ak_owner_marketing_property_smart_button" model="ir.actions.act_window">
+            <field name="name">Owner Property</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.property</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name='target'>current</field>
+            <field name="domain">[('ak_is_owner','=',active_id),('ak_is_marketing','=',True)]</field>
+            <field name="context" eval="{'default_ak_is_marketing': True, 'default_ak_is_marketing': True}"/>
+            <field name="view_id" ref="view_ak_marketing_main_property_tree" />
+            <field name="search_view_id" ref="ak_akhawen.view_ak_property_filter"/>
+        </record>
+
+
+
+
+
+
+
+    </data>
+</openerp>

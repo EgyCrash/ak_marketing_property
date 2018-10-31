@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+
+                <!-- Reservation Wizard View -->
+        <record id="view_ak_reservation_wiz_form" model="ir.ui.view">
+            <field name="name">view.ak.reservation.wiz.form</field>
+            <field name="model">ak.reservation.wiz</field>
+            <field name="arch" type="xml">
+              <form string="Reservation" >
+                 <group col="4" colspan="4">
+                    <group>
+                      <field name="ak_tenant_id" context="{'form_view_ref': 'ak_akhawen.view_partner_owner_form'}" required="1" />
+                      <field name="ak_parent_property_id" required="1"/>
+                      <field name='ak_all'/>
+                      <field name="ak_sub_property_id" widget="many2many_tags"
+                              context="{'from_reservation':ak_parent_property_id}"
+                              attrs="{'invisible': [('ak_all','=',True)], 'required':[('ak_all','=',False)]}"/>
+                    </group>
+                    <group>
+                      <field name="ak_amount" required="1" />
+                      <field name="ak_amount_numeric" required="1" />
+                      <field name="ak_type" required="1"/>
+                      <field name="journal_id" required="1"/>
+                      <field name="ak_account_id" attrs="{'invisible': [('ak_type','!=','wire')],'required':[('ak_type','=','wire')]}"/>
+                      <field name="ak_button_hide_flag" invisible="1"/>
+                    </group>
+                 </group>
+                 <separator string="Notes"/>
+                 <field name="ak_notes"/>
+                 <footer>
+                     <button name="property_reservation" string="Reservation" type="object"
+                             class="oe_highlight" context="{'from_reservation_wizard': True}"
+                             attrs="{'invisible':[('ak_button_hide_flag','=',True)]}"/>
+                     <button string="Cancel" special="cancel" class="oe_link"/>
+                 </footer>
+              </form>
+            </field>
+        </record>
+
+        <!-- Reservation Wizard Action -->
+        <record id="action_ak_reservation_wiz" model="ir.actions.act_window">
+            <field name="name">Reservation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.reservation.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name='view_id' ref='view_ak_reservation_wiz_form'/>
+            <field name='target'>new</field>
+        </record>
+
+
+
+                <!-- Reservation Wizard View -->
+        <record id="view_ak_reservation_wiz_client_form" model="ir.ui.view">
+            <field name="name">view.ak.reservation.wiz.client.form</field>
+            <field name="model">ak.reservation.client.wiz</field>
+            <field name="arch" type="xml">
+              <form string="Reservation" >
+                 <group>
+                    <group>
+                      <field name="ak_tenant_id" context="{'ak_is_marketing_default':True,'form_view_ref':'ak_akhawen.view_ak_res_partner_form'}"/>
+                      <!-- <field name="ak_sub_property_id" widget="many2many_tags" required="1"
+                              context="{'default_main_property_id': ak_parent_property_id, 'default_ak_is_marketing': True}" /> -->
+                     <field name="name" required="1"/>
+                     <field name="client_id" />
+                     <field name="mobile" />
+                    </group>
+                    <group>
+                      <field name="ak_parent_property_id" required="1"/>
+                      <field name="ak_amount" required="1" />
+                      <field name="ak_type" required="1"/>
+                      <field name="journal_id" required="1"/>
+                      <field name="ak_account_id" attrs="{'invisible': [('ak_type','!=','wire')],'required':[('ak_type','=','wire')]}"/>
+                    </group>
+                 </group>
+                 <footer>
+                     <button name="property_reservation" string="Reservation" type="object" class="oe_highlight"
+                      />
+                 </footer>
+              </form>
+            </field>
+        </record>
+
+        <!-- Reservation Wizard Action -->
+        <record id="action_ak_reservation_client_wiz" model="ir.actions.act_window">
+            <field name="name">Reservation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.reservation.client.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name='view_id' ref='view_ak_reservation_wiz_client_form'/>
+            <field name='target'>new</field>
+        </record>
+
+
+
+<!-- Marketing Reservation View -->
+        <record id="view_ak_marketing_reservation_form" model="ir.ui.view">
+            <field name="name">view.ak.marketing.reservation.form</field>
+            <field name="model">ak.reservation</field>
+            <field name="arch" type="xml">
+                <form string="Reservation" >
+                    <header>
+                        <!-- <button name="create_contract" string="Create Contract" type="object" attrs="{'invisible': [('ak_is_rev','=',True)]}"/>
+                        <button name="refund_reservation" string="Refunding" type="object"
+                        attrs="{'invisible': [('ak_is_rev','=',True)]}"/> -->
+                        <button name="%(action_ak_marketing_reservation_wiz)d" string="Done" type="action" states="draft_marketing"/>
+                        <button name="refund_reservation" string="Cancel" type="object"
+                        states="draft_marketing"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft_marketing,done_marketing"/>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <label string="Reservation "/>
+                            <field name="ak_name" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="ak_tenant_id" context="{'form_view_ref': 'ak_akhawen.view_partner_owner_form'}" required="1" />
+                                <field name="ak_user_id" required="1"/>
+                                <field name="ak_property_id" context="{'form_view_ref': 'ak_akhawen.view_ak_main_property_form'}" required="1" />
+                                <field name="ak_type" required="1"/>
+                                <field name="journal_id" required="1"/>
+                                <field name="ak_account_id" attrs="{'invisible': [('ak_type','!=','wire')],'required':[('ak_type','=','wire')]}"/>
+                                <!-- <field name="ak_sub_property_id" widget="many2many_tags"
+                                    context="{'form_view_ref': 'ak_akhawen.view_ak_sub_property_form','from_reservation':ak_property_id}"/> -->
+                                <!-- <field name="ak_status" readonly='1'/> -->
+                            </group>
+                            <group>
+                                <field name="ak_reservation_date" required="1" />
+                                <field name="ak_reservation_date_hijri" invisible="1"/>
+                                <field name="ak_amount" required="1" />
+                                <field name="ak_amount_numeric" required="1" />
+                                <field name='ak_is_rev' string='Is Refunded?' readonly="1"/>
+                                <field name="ak_marketing_reservation" invisible="1"/>
+                            </group>
+                        </group>
+                        <separator string="Notes"/>
+                        <field name="ak_notes"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="view_ak_marketing_reservation_tree" model="ir.ui.view">
+            <field name="name">view.ak.marketing.reservation.tree</field>
+            <field name="model">ak.reservation</field>
+            <field name="arch" type="xml">
+              <tree string="Reservation" >
+                  <field name="ak_tenant_id"  />
+                  <field name="ak_property_id" />
+                  <!-- <field name="ak_sub_property_id" /> -->
+                  <field name="ak_amount" />
+                  <field name="ak_user_id" />
+                  <field name="ak_reservation_date" invisible="1"/>
+                  <field name="ak_reservation_date_hijri"/>
+                  <!-- <field name="ak_status"/> -->
+                  <field name="state"/>
+              </tree>
+            </field>
+        </record>
+
+        <!-- Marketing Reservation search view -->
+        <record id="marketing_reservation_search_filter" model="ir.ui.view">
+            <field name="name">marketing.reservation.search.filter</field>
+            <field name="model">ak.reservation</field>
+            <field name="arch" type="xml">
+                <search string="Search Reservation">
+                    <field name="ak_user_id"/>
+                    <field name="ak_tenant_id" string="Tenant" filter_domain="[('ak_tenant_id','ilike',self)]"/>
+                    <field name="ak_property_id" string="Main Property" filter_domain="[('ak_property_id','ilike',self)]"/>
+                    <field name="ak_sub_property_id" string="Sub Property" filter_domain="[('ak_sub_property_id','ilike',self)]"/>
+                    <filter name="ak_is_rev" string="Is Refunded" domain="[('ak_is_rev','=',True)]" />
+                    <filter name="ak_not_rev" string="Reservation" domain="[('ak_is_rev','!=',True)]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Main Property" domain="[]" context="{'group_by':'ak_property_id'}"/>
+                        <filter string="Tenant" domain="[]" context="{'group_by':'ak_tenant_id'}"/>
+                        <filter string="User" domain="[]" context="{'group_by':'ak_user_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'ak_status'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+        <!-- Marketing Reservation Wizard Action -->
+        <record id="action_ak_marketing_reservation" model="ir.actions.act_window">
+            <field name="name">Reservation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('ak_marketing_reservation','=',True)]</field>
+            <field name="context" eval="{'search_default_ak_not_rev': True, 'default_ak_marketing_reservation': True}"/>
+            <field name='target'>current</field>
+        </record>
+
+        <!-- Marketing Reservation Action -->
+        <!-- <record id="action_ak_marketing_reservation_form" model="ir.actions.act_window">
+            <field name="name">Reservation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="act_window_id" ref="action_committee"/>
+        </record> -->
+
+        <record id="action_ak_marketing_reservation_tree" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ak_marketing_reservation_tree"/>
+            <field name="act_window_id" ref="action_ak_marketing_reservation"/>
+        </record>
+
+        <record id="action_ak_marketing_reservation_form" model="ir.actions.act_window.view">
+            <field eval="4" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ak_marketing_reservation_form"/>
+            <field name="act_window_id" ref="action_ak_marketing_reservation"/>
+        </record>
+
+
+        <!-- Marketing Sub Property Search View -->
+        <record id="view_ak_marketing_sub_property_filter" model="ir.ui.view">
+            <field name="name">view.ak.marketing.sub.property.filter</field>
+            <field name="model">ak.property</field>
+            <field name="arch" type="xml">
+                <search string="Search Marketing Sub Property">
+                    <field name="ak_name" string="Property Name"/>
+                    <field name="ak_responisible" string="Responsible"/>
+                    <field name="ak_main_property_type"/>
+                    <field name="ak_sub_property_type"/>
+                    <filter name="ak_is_rented" string="Is Rented" domain="[('ak_is_rented','=',True)]" />
+                    <filter name="ak_is_reserved" string="Is Reserved" domain="[('ak_is_reserved','=',True)]" />
+                    <filter name="ak_under_maintenance" string="Is Under Maintenance" domain="[('ak_under_maintenance','=',True)]" />
+                    <filter name="ak_admin" string="Is Under AL Akhawen Administration" domain="[('ak_admin','=',True)]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Responsible" domain="[]" context="{'group_by':'ak_responisible'}"/>
+                        <filter string="Property Type" domain="[]" context="{'group_by':'ak_main_property_type'}"/>
+                        <filter string="Sub Property Type" domain="[]" context="{'group_by':'ak_sub_property_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ak_sub_marketing_property_form" model="ir.actions.act_window">
+            <field name="name">Sub Properties</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.property</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('ak_main_property','=',False), ('ak_is_marketing','=',True)]</field>
+            <field name="context" eval="{'default_ak_is_marketing': True,'marketing_sub_properties':True}"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_ak_sub_marketing_property_form" />
+            <field name="search_view_id" ref="view_ak_marketing_sub_property_filter"/>
+        </record>
+         <record id="action_sub_marketing_property_tree" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ak_sub_marketing_property_tree"/>
+            <field name="act_window_id" ref="action_ak_sub_marketing_property_form"/>
+        </record>
+
+        <!-- Main Property Action -->
+        <record id="action_ak_main_marketing_property_form" model="ir.actions.act_window">
+            <field name="name">Advertisement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.property</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('ak_main_property','=',True),('ak_is_marketing','=',True),('ak_is_reserved','=',False)]</field>
+            <field name="context" eval="{'default_ak_main_property': True, 'default_ak_is_marketing': True,'marketing_main_properties':'Marketing Main Properties'}"/>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_ak_marketing_property_filter"/>
+        </record>
+
+        <!-- Vacant Marketing Property Action -->
+        <record id="action_ak_vacant_marketing_property_form" model="ir.actions.act_window">
+            <field name="name">Marketing List</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.property</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('ak_main_property','=',False),('ak_is_rented','=',False),('ak_is_reserved','=',False),('ak_is_marketing','=',True)]</field>
+            <field name="context" eval="{'marketing_list':True}"/>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ak_marketing_property_filter"/>
+        </record>
+        <record id="action_ak_vacant_marketing_property_form_tree_view" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="ak_akhawen.view_ak_main_property_tree"/>
+            <field name="act_window_id" ref="action_ak_vacant_marketing_property_form"/>
+        </record>
+        <record id="action_ak_vacant_marketing_property_form_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ak_sub_marketing_property_form"/>
+            <field name="act_window_id" ref="action_ak_vacant_marketing_property_form"/>
+        </record>
+        <record id="action_main_marketing_property_kanban" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="ak_akhawen.view_ak_main_property_kanban"/>
+            <field name="act_window_id" ref="action_ak_main_marketing_property_form"/>
+        </record>
+
+        <record id="action_main_marketing_property_tree" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ak_marketing_main_property_tree"/>
+            <field name="act_window_id" ref="action_ak_main_marketing_property_form"/>
+        </record>
+
+        <record id="action_main_marketing_property_form" model="ir.actions.act_window.view">
+            <field eval="5" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ak_main_marketing_property_form"/>
+            <field name="act_window_id" ref="action_ak_main_marketing_property_form"/>
+        </record>
+               <!-- Marketing search view -->
+        <record id="view_ak_marketing_filter" model="ir.ui.view">
+            <field name="name">view.ak.marketing.filter</field>
+            <field name="model">marketing.group</field>
+            <field name="arch" type="xml">
+                <search string="Marketing Group">
+                    <field name="ak_name" string="Name" filter_domain="[('ak_name','ilike',self)]"/>
+                    <group expand="0" string="Marketing Group">
+                        <filter string="User" domain="[]" context="{'group_by':'ak_user_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+       <record id="action_marketing_group_form" model="ir.actions.act_window">
+            <field name="name">Marketing Database</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">marketing.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_ak_marketing_filter"/>
+        </record>
+
+               <!--&lt;!&ndash; Marketing search view &ndash;&gt;-->
+        <record id="view_ak_marketing_filter" model="ir.ui.view">
+            <field name="name">view.ak.marketing.filter</field>
+            <field name="model">marketing.group</field>
+            <field name="arch" type="xml">
+                <search string="Marketing Group">
+                    <field name="ak_name" string="Name" filter_domain="[('ak_name','ilike',self)]"/>
+                    <group expand="0" string="Marketing Group">
+                        <filter string="User" domain="[]" context="{'group_by':'ak_user_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+    </data>
+</openerp>

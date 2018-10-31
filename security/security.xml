@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- Property Marketing -->
+        <record id='property_marketing_perm_menu' model='ir.module.category'>
+           <field name='name'>Property Marketing</field>
+        </record>
+
+        <record model="res.groups" id="marketing_property_perm_user">
+            <field name="name">User</field>
+            <field name="category_id" ref="property_marketing_perm_menu"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+       </record>
+
+        <record model="res.groups" id="marketing_property_perm_manager">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="property_marketing_perm_menu"/>
+            <field name="implied_ids" eval="[(4, ref('marketing_property_perm_user'))]"/>
+       </record>
+
+        <record id="marketing_user_rule_property" model="ir.rule">
+            <field name="name">Marketing User property</field>
+            <field name="model_id" ref="ak_akhawen.model_ak_property"/>
+            <field name="domain_force">['|',('ak_reponsible_ids','=',False),('ak_reponsible_ids','in',[user.id])]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_user'))]"/>
+        </record>
+
+        <record id="marketing_user_rule_reservation" model="ir.rule">
+            <field name="name">Marketing User reservation</field>
+            <field name="model_id" ref="ak_akhawen.model_ak_reservation"/>
+            <field name="domain_force">['|',('ak_user_id','=',False),('ak_user_id','in',[user.id])]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_user'))]"/>
+        </record>
+
+        <record id="marketing_user_rule_base" model="ir.rule">
+            <field name="name">Marketing User</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">['|',('ak_user_ids','in',[user.id]),('ak_user_ids','=',False)]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_user'))]"/>
+        </record>
+
+        <record id="marketing_user_rule_marketing" model="ir.rule">
+            <field name="name">Marketing User</field>
+            <field name="model_id" ref="ak_akhawen.model_marketing_group"/>
+            <field name="domain_force">['|',('ak_user_id','in',[user.id]),('ak_user_id','=',False)]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_user'))]"/>
+        </record>
+
+        <!--Admin Rules-->
+        <record id="property_reservation_manager_rule" model="ir.rule">
+            <field name="name">Property Reservation Manager</field>
+            <field name="model_id" ref="ak_akhawen.model_ak_property"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_manager'))]"/>
+        </record>
+
+        <record id="marketing_manager_rule_property" model="ir.rule">
+            <field name="name">Marketing Manager property</field>
+            <field name="model_id" ref="ak_akhawen.model_ak_property"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_manager'))]"/>
+        </record>
+        <record id="marketing_manager_rule_reservation" model="ir.rule">
+            <field name="name">Marketing User reservation</field>
+            <field name="model_id" ref="ak_akhawen.model_ak_reservation"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_manager'))]"/>
+        </record>
+
+        <record id="marketing_manager_rule_base" model="ir.rule">
+            <field name="name">Marketing User</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_manager'))]"/>
+        </record>
+
+        <record id="marketing_manager_rule_marketing" model="ir.rule">
+            <field name="name">Marketing User</field>
+            <field name="model_id" ref="ak_akhawen.model_marketing_group"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('marketing_property_perm_manager'))]"/>
+        </record>
+
+
+     </data>
+</openerp>

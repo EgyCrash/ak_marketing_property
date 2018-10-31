@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+
+        <menuitem name="Property Marketing" id="property_marketing_main_menu" parent="" groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+        <menuitem name="Dashboard" id="property_marketing_dashboard_menu" parent="property_marketing_main_menu" sequence="1" groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+        <menuitem name="Mass Mailing Analysis" id="property_marketing_dashboard_mail_analysis" parent="property_marketing_dashboard_menu" action="mass_mailing.action_mail_statistics_report" sequence="2"
+                  groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+        <menuitem name="Marketing" id="property_marketing_sub_menu" parent="property_marketing_main_menu" sequence="3"
+                  groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+        <menuitem name="Advertisement" id="menu_ak_main_marketing_advertisement" parent="property_marketing_sub_menu" action="action_ak_main_marketing_property_form" sequence="6"
+        groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+        <menuitem name="Reservation" id="menu_ak_marketing_properties_reservation" parent="property_marketing_sub_menu" action="action_ak_marketing_reservation" sequence="7"
+        groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+        <menuitem name="Marketing Database" id="menu_marketing_group_menu" parent="property_marketing_sub_menu"  action="action_marketing_group_form" sequence="8"
+        groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+        <menuitem name="Customers" id="menu_ak_cus_res_partner_menu" parent="property_marketing_sub_menu" action="ak_akhawen.action_ak_res_partner_form" sequence="9"
+        groups="marketing_property_perm_manager,marketing_property_perm_user"/>
+
+
+    </data>
+</openerp>

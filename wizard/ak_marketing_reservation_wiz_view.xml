@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Marketing Reservation Wizard View -->
+        <record id="view_ak_marketing_reservation_wiz_form" model="ir.ui.view">
+            <field name="name">view.ak.marketing.reservation.wiz.client.form</field>
+            <field name="model">ak.marketing.reservation.wiz</field>
+            <field name="arch" type="xml">
+              <form string="Marketing Deal Reservation" >
+                <group>
+                  <div>
+                    <label string="Commission(who created the deal) "/>
+                    <field name="responsible_user_id" string="Commission(who created the deal)" class="oe_inline" readonly="1"/>
+                    <field name="responsible_commission" class="oe_inline"/>
+                  </div>
+                  <div>
+                    <label string="Commission(who closed the deal) "/>
+                    <field name="reserved_user_id" string="Commission(who closed the deal)" class="oe_inline" readonly="1"/>
+                    <field name="reserved_commission" class="oe_inline"/>
+                  </div>
+                </group>
+                <footer>
+                  <button name="done_reservation" string="Done" type="object" class="oe_highlight"/>
+                  or
+                  <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+              </form>
+            </field>
+        </record>
+
+        <!-- Marketing Reservation Wizard Action -->
+        <record id="action_ak_marketing_reservation_wiz" model="ir.actions.act_window">
+            <field name="name">Marketing Deal Reservation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ak.marketing.reservation.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name='view_id' ref='view_ak_marketing_reservation_wiz_form'/>
+            <field name='target'>new</field>
+        </record>
+
+    </data>
+</openerp>
